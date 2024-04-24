@@ -12,6 +12,6 @@ interface StoreState {
 export const useStore = createStore<StoreState>((set) => ({
     wallet: undefined,
     signedAccountId: '',
-    setWallet: (wallet: NearWallet) => set({ wallet }),
-    setSignedAccountId: (signedAccountId: string | undefined) => set({ signedAccountId })
+    setWallet: (wallet) => set({ wallet }),
+    setSignedAccountId: (signedAccountId) => set({ signedAccountId })
 }));

@@ -8,13 +8,13 @@ import {useStore} from "@/wallets/useStore";
 
 export const Navigation = () => {
     const {signedAccountId, wallet} = useStore()
-    // const [action, setAction] = useState(() => {})
     const [action, setAction] = useState<(() => void) | undefined>(undefined)
     const [label, setLabel] = useState('Loading...')
 
     useEffect(() => {
         if (!wallet) return;
 
+        console.log('signedAccountId -> ' + signedAccountId)
         if (signedAccountId) {
             setAction(() => wallet.signOut);
             setLabel(`Logout ${signedAccountId}`);

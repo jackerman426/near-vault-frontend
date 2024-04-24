@@ -2,12 +2,12 @@
 
 import { Inter } from "next/font/google"
 import "./globals.css"
+import {useEffect} from "react";
 import { Navigation } from "@/components/navigation"
 
-import { useStore } from "@/wallets/useStore";
 import {NearWallet} from "@/wallets/near-wallet";
+import { useStore } from "@/wallets/useStore";
 import {NearVaultsContract, NetworkId} from "@/config";
-import {useEffect} from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,7 +29,7 @@ export default function RootLayout({
                 console.error('Failed to initialize the wallet:', error);
             }
         }
-        initWallet().then(()=>console.info("wallet initialized"))
+        initWallet().then(()=>console.info('wallet initialized'))
     }, [setSignedAccountId, setWallet]);
 
     return (

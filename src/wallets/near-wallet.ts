@@ -29,25 +29,10 @@ interface CustomQueryResponse {
 }
 
 interface CallMethodArgs {
-    /**
-     * The contract's account id.
-     */
     contractId: string
-    /**
-     * The method to call.
-     */
     method: string
-    /**
-     * The arguments to pass to the method.
-     */
     args?: Record<string, unknown>
-    /**
-     * The amount of gas for the transaction.
-     */
     gas?: string
-    /**
-     * The amount to be deposited along with the transaction.
-     */
     deposit?: string
 }
 
@@ -99,6 +84,7 @@ export class NearWallet {
             )
             .subscribe(accounts => {
                 const signedAccount = accounts.find((account) => account.active)?.accountId
+                console.log('Observable triggered -> ' + signedAccount)
                 accountChangeHook(signedAccount)
             });
 
@@ -107,7 +93,7 @@ export class NearWallet {
 
 
     /**
-     * Displays a modal to login the user
+     * Displays a modal to log in the user
      */
     signIn = async () => {
         if( this.createAccessKeyFor ){
@@ -122,16 +108,17 @@ export class NearWallet {
     signOut = async () => {
         if (this.selectedWallet) {
             await this.selectedWallet.signOut()
+            this.selectedWallet = this.accountId =  undefined //here it was also deleting this.createAccessKeyFor
         }
-        this.selectedWallet = this.accountId = this.createAccessKeyFor = undefined
     }
 
     /**
      * Makes a read-only call to a contract
-     * @param {string} contractId - the contract's account id
-     * @param {string} method - the method to call
-     * @param {Object} args - the arguments to pass to the method
-     * @returns {Promise<JSON.value>} - the result of the method call
+     * @param {Object} viewMethodArgs
+     * @param {string} viewMethodArgs.contractId - The contract's account id
+     * @param {string} viewMethodArgs.method - The method to call
+     * @param {Object} viewMethodArgs.args={} - The arguments to pass to the method (optional)
+     * @returns {Promise<any>} - The result of the method call
      */
     viewMethod = async ({ contractId, method, args = {} }: ViewMethodArgs): Promise<any> => {
         const walletSelector = await this.selector
@@ -150,11 +137,12 @@ export class NearWallet {
 
     /**
      * Makes a call to a contract
-     * @param {string} contractId - the contract's account id
-     * @param {string} method - the method to call
-     * @param {Object} args - the arguments to pass to the method
-     * @param {string} gas - the amount of gas to use
-     * @param {string} deposit - the amount of yoctoNEAR to deposit
+     * @param {Object} callMethodArgs
+     * @param {string} callMethodArgs.contractId - the contract's account id
+     * @param {string} callMethodArgs.method - the method to call
+     * @param {Object} callMethodArgs.args - the arguments to pass to the method
+     * @param {string} callMethodArgs.gas - the amount of gas to use
+     * @param {string} callMethodArgs.deposit - the amount of yoctoNEAR to deposit
      * @returns {Promise<Transaction>} - the resulting transaction
      */
     callMethod = async ({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: CallMethodArgs): Promise<any> => {
@@ -191,7 +179,7 @@ export class NearWallet {
     //     const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
     //
     //     // Retrieve transaction result from the network
-    //     const transaction = await provider.txStatus(txhash, 'unnused');
+    //     const transaction = await provider.txStatus(txhash, 'unused');
     //     return providers.getTransactionLastResult(transaction);
     // };
 }
