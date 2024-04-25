@@ -1,44 +1,50 @@
 'use client'
 
-import { Inter } from "next/font/google"
-import "./globals.css"
-import {useEffect} from "react";
-import { Navigation } from "@/components/navigation"
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { useEffect } from 'react'
+import { Navigation } from '@/components/navigation'
 
-import {NearWallet} from "@/wallets/near-wallet";
-import { useStore } from "@/wallets/useStore";
-import {NearVaultsContract, NetworkId} from "@/config";
+import { NearWallet } from '@/wallets/near-wallet'
+import { useStore } from '@/wallets/useStore'
+import { NearVaultsContract, NetworkId } from '@/config'
+import * as React from 'react'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
-    const { setWallet, setSignedAccountId } = useStore()
+  const { setWallet, setSignedAccountId } = useStore()
 
-    useEffect(() => {
-        const wallet = new NearWallet({networkId: NetworkId, createAccessKeyFor: NearVaultsContract })
+  useEffect(() => {
+    const wallet = new NearWallet({
+      networkId: NetworkId,
+      createAccessKeyFor: NearVaultsContract,
+    })
 
-        async function initWallet() {
-            try {
-                await wallet.startUp(setSignedAccountId)
-                setWallet(wallet)
-            } catch (error) {
-                console.error('Failed to initialize the wallet:', error);
-            }
-        }
-        initWallet().then(()=>console.info('wallet initialized'))
-    }, [setSignedAccountId, setWallet]);
+    async function initWallet() {
+      try {
+        await wallet.startUp(setSignedAccountId)
+        setWallet(wallet)
+      } catch (error) {
+        console.error('Failed to initialize the wallet:', error)
+      }
+    }
+    initWallet().then(() => console.info('wallet initialized'))
+  }, [setSignedAccountId, setWallet])
 
-    return (
-        <html lang="en">
-        <body className={inter.className}>
-        <div className="flex dark:text-slate-400 dark:bg-gray-900 dark:border-gray-700">
-            <Navigation/>
-            <div className="p-8">{children}</div>
-        </div></body>
-        </html>
-    );
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <div className="flex h-screen bg-gray-50 text-gray-900 ">
+          <Navigation />
+          {/*{children}*/}
+          <div className="flex-grow p-24 text-sm">{children}</div>
+        </div>
+      </body>
+    </html>
+  )
 }
