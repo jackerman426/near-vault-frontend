@@ -1,20 +1,55 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { ChangeEvent, Fragment, useState } from 'react'
+import { useStore } from '@/wallets/useStore'
+import { DEPOSIT_FOR_MINT, GAS_FOR_MINT } from '@/config'
 
-export default function MintDialog() {
+interface MintDialogProps {
+  id: string
+}
+
+export default function MintDialog({ id }: MintDialogProps) {
   let [isOpen, setIsOpen] = useState(false)
   const [passName, setPassName] = useState('')
+  const [showSpinner, setShowSpinner] = useState(false)
+  const { wallet } = useStore()
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     setPassName(event.target.value)
+  }
+
+  async function mint() {
+    setShowSpinner(true)
+
+    try {
+      if (wallet) {
+        await wallet.callMethod({
+          contractId: id,
+          method: 'nft_mint',
+          args: {
+            name: passName,
+          },
+          gas: GAS_FOR_MINT,
+          deposit: DEPOSIT_FOR_MINT,
+        })
+      }
+    } catch (error) {
+      console.error('Failed to mint pass:', error)
+    }
+    setShowSpinner(false)
+  }
+
+  function openModal() {
+    setIsOpen(true)
   }
 
   function closeModal() {
     setIsOpen(false)
   }
 
-  function openModal() {
-    setIsOpen(true)
+  async function handleMint(e: { preventDefault: () => void }) {
+    e.preventDefault()
+    await mint()
+    closeModal()
   }
 
   return (
@@ -23,7 +58,7 @@ export default function MintDialog() {
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md border border-transparent  px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          className="rounded-md border border-transparent px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
         >
           Mint
         </button>
@@ -73,7 +108,7 @@ export default function MintDialog() {
                       type="text"
                       value={passName}
                       onChange={handleInputChange}
-                      className="border border-gray-300 rounded-md  px-3 py-2 text-gray-900"
+                      className="border border-gray-300 rounded-md text-sm px-3 py-2 text-gray-900 w-full"
                       placeholder="Enter pass name"
                     />
                   </div>
@@ -81,8 +116,8 @@ export default function MintDialog() {
                   <div className="mt-4">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent  px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
+                      className="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={handleMint}
                       disabled={!passName}
                     >
                       Mint

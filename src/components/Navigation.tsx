@@ -1,6 +1,7 @@
 //ICONS TAKEN FROM https://flowbite.com/icons/
 
 import React, { MouseEventHandler, useEffect, useState } from 'react'
+import Link from 'next/link'
 import NearLogo from '~/svg/near.svg'
 
 import { useStore } from '@/wallets/useStore'
@@ -25,20 +26,17 @@ export const Navigation = () => {
   }, [signedAccountId, wallet, setAction, setLabel])
 
   return (
-    <aside className="flex flex-col w-64 h-screen px-5 py-8 overflow-y-auto rtl:border-r-0 rtl:border-l border-r bg-blue-500">
+    <aside className="flex flex-col w-full md:w-64 h-screen px-5 py-8 overflow-y-auto bg-blue-500 flex-shrink-0">
       <a href="#">
-        {/*<img className="w-auto h-7" src="https://merakiui.com/images/logo.svg" alt=""/>*/}
         <NearLogo className="w-auto h-7" />
       </a>
-
       <div className="flex flex-col justify-between flex-1 mt-8">
-        <nav className="-mx-3 space-y-6 ">
-          <div className="space-y-3 ">
-            {/*<label className="px-3 text-xs text-gray-500 uppercase dark:text-gray-400">analytics</label>*/}
-
-            <a
-              className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-100 transform rounded-lg hover:text-white dark:text-gray-200"
-              href="#"
+        <nav className="-mx-3 space-y-6">
+          <div className="space-y-3">
+            <Link
+              className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:text-white"
+              href="/"
+              passHref
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -54,13 +52,13 @@ export const Navigation = () => {
                   d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
                 />
               </svg>
-
               <span className="mx-2 text-sm font-medium">Dashboard</span>
-            </a>
+            </Link>
 
-            <a
+            <Link
               className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:text-white"
-              href="#"
+              href="/vaults"
+              passHref
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,11 +76,12 @@ export const Navigation = () => {
               </svg>
 
               <span className="mx-2 text-sm font-medium">Vaults</span>
-            </a>
+            </Link>
 
-            <a
+            <Link
               className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:text-white"
-              href="#"
+              href="/passes"
+              passHref
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -100,12 +99,13 @@ export const Navigation = () => {
               </svg>
 
               <span className="mx-2 text-sm font-medium">Passes</span>
-            </a>
+            </Link>
+
+            {/* Repeat similar structure for other links */}
           </div>
 
-          <div className="space-y-3 ">
+          <div className="space-y-3">
             <label className="px-3 text-xs text-white uppercase">Wallet</label>
-
             <a
               className="flex items-center px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:text-white"
               href="#"
@@ -126,7 +126,6 @@ export const Navigation = () => {
                   d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"
                 />
               </svg>
-
               <span className="mx-2 text-sm font-light">{label}</span>
             </a>
           </div>

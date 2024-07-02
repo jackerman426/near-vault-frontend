@@ -3,7 +3,7 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { useEffect } from 'react'
-import { Navigation } from '@/components/navigation'
+import { Navigation } from '@/components/Navigation'
 
 import { NearWallet } from '@/wallets/near-wallet'
 import { useStore } from '@/wallets/useStore'
@@ -39,10 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex h-screen bg-gray-50 text-gray-900 ">
+        <div className="flex flex-col md:flex-row h-screen bg-gray-50 text-gray-900">
           <Navigation />
           {/*{children}*/}
-          <div className="flex-grow p-24 text-sm">{children}</div>
+          <div className="flex-grow p-4 md:p-24 overflow-auto text-sm">
+            {children}
+          </div>
         </div>
       </body>
     </html>
