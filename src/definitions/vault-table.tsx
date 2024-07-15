@@ -19,6 +19,12 @@ interface VaultStore {
     wallet: NearWallet | undefined,
     contractId: string,
   ) => Promise<VaultType[]>
+  myVaults: VaultType[]
+  setMyVaults: (myVaults: VaultType[]) => void
+  getMyVaults: (
+    wallet: NearWallet | undefined,
+    contractId: string,
+  ) => Promise<VaultType[]>
 }
 
 export const useVaultStore = createStore<VaultStore>((set) => ({
@@ -41,15 +47,33 @@ export const useVaultStore = createStore<VaultStore>((set) => ({
       return []
     }
   },
+  myVaults: [],
+  setMyVaults: (myVaults) => set({ myVaults }),
+  getMyVaults: async (wallet, contractId) => {
+    if (!wallet) {
+      console.log('Wallet not available yet')
+      return
+    }
+    try {
+      const data = await wallet.viewMethod({
+        contractId: contractId,
+        method: 'view_vaults_by_account_id',
+        args: {
+          accountId: wallet.accountId,
+        },
+      })
+      set({ myVaults: data })
+      return data
+    } catch (error) {
+      console.error('Failed to fetch vaults:', error)
+      return []
+    }
+  },
 }))
 
 const columnHelper = createColumnHelper<VaultType>()
 
-export const vaultDefinition = [
-  columnHelper.accessor('accountId', {
-    header: 'Owner',
-    cell: (props) => props.getValue(),
-  }),
+export const myVaultDefinition = [
   columnHelper.accessor('name', {
     header: 'Name',
     cell: (props) => props.getValue(),
@@ -64,6 +88,14 @@ export const vaultDefinition = [
   }),
   columnHelper.accessor('id', {
     header: 'Contract id',
+    cell: (props) => props.getValue(),
+  }),
+] as Array<ColumnDef<unknown, VaultType>>
+
+export const vaultDefinition = [
+  ...myVaultDefinition,
+  columnHelper.accessor('accountId', {
+    header: 'Owner',
     cell: (props) => props.getValue(),
   }),
   columnHelper.accessor('mint', {

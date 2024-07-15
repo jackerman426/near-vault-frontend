@@ -131,7 +131,10 @@ export class NearWallet {
   }: ViewMethodArgs): Promise<any> => {
     const walletSelector = await this.selector
     const { network } = walletSelector.options
-    const provider = new providers.JsonRpcProvider({ url: network.nodeUrl })
+    // const provider = new providers.JsonRpcProvider({ url: network.nodeUrl })
+    const provider = new providers.JsonRpcProvider({
+      url: 'https://rpc.testnet.pagoda.co/',
+    })
 
     let res = await provider.query<CustomQueryResponse>({
       request_type: 'call_function',
