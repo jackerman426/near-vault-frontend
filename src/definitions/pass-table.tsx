@@ -9,9 +9,9 @@ interface Metadata {
   amount: number
 }
 export interface PassType {
-  tokenId: string
-  ownerId: string
   vaultId: string
+  ownerId: string
+  vaultName: string
   metadata: Metadata
 }
 
@@ -57,6 +57,7 @@ export const usePassStore = createStore<PassStore>((set) => ({
         })
         return passes.map((pass: Omit<PassType, 'vaultId'>) => ({
           ...pass,
+          vaultName: vault.name,
           vaultId: vault.id,
         }))
       })
@@ -73,16 +74,16 @@ export const usePassStore = createStore<PassStore>((set) => ({
 const columnHelper = createColumnHelper<PassType>()
 
 export const passDefinition = [
+  columnHelper.accessor('vaultName', {
+    header: 'Vault Name',
+    cell: (props) => props.getValue(),
+  }),
   columnHelper.accessor('vaultId', {
     header: 'Vault Id',
     cell: (props) => props.getValue(),
   }),
-  columnHelper.accessor('tokenId', {
-    header: 'Token Id',
-    cell: (props) => props.getValue(),
-  }),
   columnHelper.accessor('metadata.name', {
-    header: 'Name',
+    header: 'Nft Name',
     cell: (props) => props.getValue(),
   }),
   columnHelper.accessor('metadata.amount', {
