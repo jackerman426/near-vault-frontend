@@ -15,5 +15,11 @@ export const MyVaultsTable = () => {
     getMyVaults(wallet, CONTRACT)
   }, [wallet, getMyVaults])
 
-  return <Table data={myVaults} columns={myVaultDefinition} />
+  const columns = myVaultDefinition()
+
+  return (
+    <div>
+      <Table data={myVaults} columns={columns} />
+    </div>
+  )
 }

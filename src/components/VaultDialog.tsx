@@ -1,13 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { ChangeEvent, Fragment, useState } from 'react'
 import { useStore } from '@/wallets/useStore'
-import {
-  DEPOSIT_FOR_MINT,
-  GAS_FOR_MINT,
-  DEPOSIT_FOR_VAULT,
-  NearVaultsContract,
-  GAS_FOR_VAULT,
-} from '@/config'
+import { DEPOSIT_FOR_VAULT, NearVaultsContract, GAS_FOR_VAULT } from '@/config'
+import FrequencyDropdown from '@/components/FrequencyDropdown'
 
 const CONTRACT = NearVaultsContract
 
@@ -16,9 +11,9 @@ type VaultDialogProps = {
   onClose: () => void
 }
 
-export default function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
+function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
   const [vaultName, setVaultName] = useState('')
-  const [vaultFrequency, setVaultFrequency] = useState('')
+  const [vaultFrequency, setVaultFrequency] = useState<number | null>(null)
   const [vaultAmount, setVaultAmount] = useState('')
   const [showSpinner, setShowSpinner] = useState(false)
   const { wallet } = useStore()
@@ -26,13 +21,14 @@ export default function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target
     if (name === 'vaultName') setVaultName(value)
-    else if (name === 'vaultFrequency') setVaultFrequency(value)
     else if (name === 'vaultAmount') setVaultAmount(value)
   }
 
-  async function create() {
-    setShowSpinner(true)
+  const handleFrequencyChange = (frequency: number) => {
+    setVaultFrequency(frequency)
+  }
 
+  async function create() {
     try {
       if (wallet) {
         await wallet.callMethod({
@@ -50,20 +46,21 @@ export default function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
     } catch (error) {
       console.error('Failed to create vault:', error)
     }
-    setShowSpinner(false)
   }
 
   async function handleCreate(e: { preventDefault: () => void }) {
     e.preventDefault()
+    setShowSpinner(true)
     await create()
+    setShowSpinner(false)
     onClose()
   }
 
   const isFormValid = () => {
-    const frequency = Number(vaultFrequency)
-    const amount = Number(vaultAmount)
     return (
-      vaultName.trim() !== '' && amount > 0 && frequency >= 0 && frequency <= 4
+      vaultName.trim() !== '' &&
+      vaultFrequency !== null &&
+      Number(vaultAmount) > 0
     )
   }
 
@@ -125,18 +122,11 @@ export default function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
                       Frequency
                     </label>
                     <p className="text-sm text-gray-500 mb-2">
-                      The payment frequency of this vault (0-4)
+                      The payment frequency of this vault
                     </p>
-                    <input
-                      type="number"
-                      name="vaultFrequency"
-                      value={vaultFrequency}
-                      onChange={handleInputChange}
-                      className="border border-gray-300 rounded-md text-sm px-3 py-2 text-gray-900 w-full"
-                      placeholder="Enter frequency"
-                      min="0"
-                      max="4"
-                      required
+                    <FrequencyDropdown
+                      selectedFrequency={vaultFrequency}
+                      onChange={handleFrequencyChange}
                     />
                   </div>
 
@@ -177,3 +167,5 @@ export default function VaultDialog({ isOpen, onClose }: VaultDialogProps) {
     </Transition>
   )
 }
+
+export default VaultDialog

@@ -2,6 +2,7 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { NearWallet } from '@/wallets/near-wallet'
 import { create as createStore } from 'zustand'
 import { useVaultStore } from '@/definitions/vault-table'
+import { FrequencyTranslation } from '@/definitions/frequency'
 
 interface Metadata {
   name: string
@@ -73,25 +74,28 @@ export const usePassStore = createStore<PassStore>((set) => ({
 
 const columnHelper = createColumnHelper<PassType>()
 
-export const passDefinition = [
-  columnHelper.accessor('vaultName', {
-    header: 'Vault Name',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('vaultId', {
-    header: 'Vault Id',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('metadata.name', {
-    header: 'Nft Name',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('metadata.amount', {
-    header: 'Amount',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('metadata.frequency', {
-    header: 'Frequency',
-    cell: (props) => props.getValue(),
-  }),
-] as Array<ColumnDef<unknown, PassType>>
+export const passDefinition = () => {
+  const { getFrequencyByNumber } = FrequencyTranslation()
+  return [
+    columnHelper.accessor('vaultName', {
+      header: 'Vault Name',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('vaultId', {
+      header: 'Vault Id',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('metadata.name', {
+      header: 'Nft Name',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('metadata.amount', {
+      header: 'Amount',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('metadata.frequency', {
+      header: 'Frequency',
+      cell: (props) => getFrequencyByNumber(props.getValue()),
+    }),
+  ] as Array<ColumnDef<unknown, PassType>>
+}

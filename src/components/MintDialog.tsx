@@ -7,7 +7,7 @@ interface MintDialogProps {
   id: string
 }
 
-export default function MintDialog({ id }: MintDialogProps) {
+function MintDialog({ id }: MintDialogProps) {
   let [isOpen, setIsOpen] = useState(false)
   const [passName, setPassName] = useState('')
   const [showSpinner, setShowSpinner] = useState(false)
@@ -120,7 +120,7 @@ export default function MintDialog({ id }: MintDialogProps) {
                       onClick={handleMint}
                       disabled={!passName}
                     >
-                      Mint
+                      {showSpinner ? 'Minting...' : 'Mint'}
                     </button>
                   </div>
                 </Dialog.Panel>
@@ -132,3 +132,5 @@ export default function MintDialog({ id }: MintDialogProps) {
     </>
   )
 }
+
+export default MintDialog

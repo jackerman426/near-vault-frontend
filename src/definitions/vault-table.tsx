@@ -2,6 +2,7 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import MintDialog from '@/components/MintDialog'
 import { create as createStore } from 'zustand'
 import { NearWallet } from '@/wallets/near-wallet'
+import { FrequencyTranslation } from '@/definitions/frequency'
 
 export interface VaultType {
   accountId: string
@@ -40,6 +41,7 @@ export const useVaultStore = createStore<VaultStore>((set) => ({
         contractId: contractId,
         method: 'view_vaults',
       })
+      console.log('getVaults')
       set({ vaults: data })
       return data
     } catch (error) {
@@ -73,36 +75,43 @@ export const useVaultStore = createStore<VaultStore>((set) => ({
 
 const columnHelper = createColumnHelper<VaultType>()
 
-export const myVaultDefinition = [
-  columnHelper.accessor('name', {
-    header: 'Name',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('frequency', {
-    header: 'Frequency',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('amount', {
-    header: 'Amount (N)',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('id', {
-    header: 'Contract id',
-    cell: (props) => props.getValue(),
-  }),
-] as Array<ColumnDef<unknown, VaultType>>
+export const myVaultDefinition = () => {
+  const { getFrequencyByNumber } = FrequencyTranslation()
+  return [
+    columnHelper.accessor('name', {
+      header: 'Name',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('frequency', {
+      header: 'Frequency',
+      cell: (props) => getFrequencyByNumber(props.getValue()),
+    }),
+    columnHelper.accessor('amount', {
+      header: 'Amount (N)',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('id', {
+      header: 'Contract id',
+      cell: (props) => props.getValue(),
+    }),
+  ] as Array<ColumnDef<unknown, VaultType>>
+}
 
-export const vaultDefinition = [
-  ...myVaultDefinition,
-  columnHelper.accessor('accountId', {
-    header: 'Owner',
-    cell: (props) => props.getValue(),
-  }),
-  columnHelper.accessor('mint', {
-    header: 'Pass',
-    cell: (props) => {
-      const id = props.row.original.id
-      return <MintDialog id={id} />
-    },
-  }),
-] as Array<ColumnDef<unknown, VaultType>>
+export const vaultDefinition = () => {
+  const columns = myVaultDefinition()
+
+  return [
+    ...columns,
+    columnHelper.accessor('accountId', {
+      header: 'Owner',
+      cell: (props) => props.getValue(),
+    }),
+    columnHelper.accessor('mint', {
+      header: 'Pass',
+      cell: (props) => {
+        const id = props.row.original.id
+        return <MintDialog id={id} />
+      },
+    }),
+  ] as Array<ColumnDef<unknown, VaultType>>
+}

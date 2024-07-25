@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useStore } from '@/wallets/useStore'
-import { passDefinition, PassType } from '@/definitions/pass-table'
+import { passDefinition } from '@/definitions/pass-table'
 import { usePassStore } from '@/definitions/pass-table'
 import Table from '@/components/Table'
 import { NearVaultsContract } from '@/config'
@@ -15,5 +15,11 @@ export const PassTable = () => {
     getPasses(wallet, CONTRACT)
   }, [wallet, getPasses])
 
-  return <Table data={passes} columns={passDefinition} />
+  const columns = passDefinition()
+
+  return (
+    <div>
+      <Table data={passes} columns={columns} />
+    </div>
+  )
 }
