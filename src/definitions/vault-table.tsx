@@ -73,6 +73,8 @@ export const useVaultStore = createStore<VaultStore>((set) => ({
   },
 }))
 
+//FIXME: The table is rendered multiple times. Maybe useMemo needs to be used to cache the columns
+
 const columnHelper = createColumnHelper<VaultType>()
 
 export const myVaultDefinition = () => {
@@ -99,7 +101,6 @@ export const myVaultDefinition = () => {
 
 export const vaultDefinition = () => {
   const columns = myVaultDefinition()
-
   return [
     ...columns,
     columnHelper.accessor('accountId', {

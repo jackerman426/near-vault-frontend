@@ -37,7 +37,6 @@ export const FrequencyTranslation = () => {
   const frequencyMap = useFrequencyStore((state) => state.frequencyMap)
 
   const getFrequencyByNumber = (frequency: number) => {
-    console.log(frequencyMap)
     return frequencyMap[frequency] || 'Unknown'
   }
 
