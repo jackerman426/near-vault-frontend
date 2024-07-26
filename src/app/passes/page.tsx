@@ -2,6 +2,7 @@
 import * as React from 'react'
 import { NextPage } from 'next'
 import { PassTable } from '@/components/PassTable'
+import { VaultTable } from '@/components/VaultTable'
 
 const Passes: NextPage = () => {
   return (
@@ -13,7 +14,9 @@ const Passes: NextPage = () => {
             <p>Here you can find a list of your passes.</p>
             {/* If you need a button here, add it similarly */}
           </div>
-          <PassTable />
+          <div className="overflow-x-auto">
+            <PassTable />
+          </div>
         </div>
       </main>
     </>

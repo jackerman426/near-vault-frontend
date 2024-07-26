@@ -3,11 +3,12 @@ import {
   useReactTable,
   flexRender,
   getCoreRowModel,
+  ColumnDef,
 } from '@tanstack/react-table'
 
 interface TableProps {
   data: any[]
-  columns: any[]
+  columns: ColumnDef<any, any>[]
 }
 
 const Table: React.FC<TableProps> = ({ data, columns }) => {
@@ -18,7 +19,7 @@ const Table: React.FC<TableProps> = ({ data, columns }) => {
   })
 
   return (
-    <main className="flex-col overflow-x-auto">
+    <div className="flex-col overflow-x-auto">
       <table className="min-w-full bg-white">
         <thead>
           {tableInstance.getHeaderGroups().map((headerGroup) => (
@@ -52,7 +53,7 @@ const Table: React.FC<TableProps> = ({ data, columns }) => {
           ))}
         </tbody>
       </table>
-    </main>
+    </div>
   )
 }
 

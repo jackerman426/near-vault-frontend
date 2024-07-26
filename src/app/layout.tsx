@@ -61,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col md:flex-row h-screen bg-gray-50 text-gray-900">
+        <div className="flex flex-col md:flex-row h-screen">
           <Navigation links={links} />
           <div className="flex-grow p-4 md:p-24 overflow-auto text-sm">
             {children}

@@ -1,33 +1,33 @@
+/* globals.css */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+html, body {
+  @apply h-full bg-gray-50 text-gray-900;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+aside {
+  @apply md:w-64 w-full md:h-screen flex-shrink-0 bg-blue-500 overflow-y-auto;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+nav {
+  @apply -mx-3 space-y-6;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+a {
+  @apply flex items-center px-3 py-2 transition-colors duration-300 transform rounded-lg hover:bg-blue-400 text-gray-600 dark:text-gray-200;
 }
+
+a:hover {
+  @apply text-white;
+}
+
+.flex-grow {
+  @apply flex flex-col;
+}
+
+/*.overflow-auto {*/
+/*  @apply overflow-auto;*/
+/*}*/

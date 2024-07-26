@@ -4,6 +4,7 @@ import { NextPage } from 'next'
 import { MyVaultsTable } from '@/components/MyVaultsTable'
 import VaultDialog from '@/components/VaultDialog'
 import { useState } from 'react'
+import { PassTable } from '@/components/PassTable'
 
 const Vaults: NextPage = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -27,7 +28,9 @@ const Vaults: NextPage = () => {
               Create
             </button>
           </div>
-          <MyVaultsTable />
+          <div className="overflow-x-auto">
+            <MyVaultsTable />
+          </div>
         </div>
       </main>
       <VaultDialog isOpen={isDialogOpen} onClose={closeDialog} />

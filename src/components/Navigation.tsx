@@ -1,10 +1,7 @@
-//ICONS TAKEN FROM https://flowbite.com/icons/
-
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import NearLogo from '~/svg/near.svg'
-
 import { useStore } from '@/wallets/useStore'
 import { NearVaultsContract } from '@/config'
 import { cn } from '@/app/lib/utils'
@@ -19,10 +16,10 @@ interface NavigationProps {
 
 export const Navigation = ({ links }: NavigationProps) => {
   const pathname = usePathname()
-
   const { signedAccountId, wallet } = useStore()
   const [action, setAction] = useState<(() => void) | undefined>(undefined)
   const [label, setLabel] = useState('Loading...')
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     if (!wallet) return
@@ -37,12 +34,41 @@ export const Navigation = ({ links }: NavigationProps) => {
     }
   }, [signedAccountId, wallet, setAction, setLabel])
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen)
+  }
+
   return (
-    <aside className="flex flex-col w-full md:w-64 h-screen px-5 py-8 overflow-y-auto bg-blue-500 flex-shrink-0">
-      <a href="#">
-        <NearLogo className="w-auto h-7" />
-      </a>
-      <div className="flex flex-col justify-between flex-1 mt-8">
+    <aside className="flex flex-col md:w-64 w-full md:h-screen px-5 py-8 overflow-y-auto bg-blue-500 md:flex-shrink-0">
+      <div className="flex justify-between items-center">
+        <a href="#">
+          <NearLogo className="w-auto h-7" />
+        </a>
+        <div className="md:hidden">
+          <button
+            onClick={toggleMenu}
+            className="text-white focus:outline-none"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16m-7 6h7'}
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        className={`md:flex flex-col justify-between flex-1 mt-8 ${isOpen ? 'block' : 'hidden'}`}
+      >
         <nav className="-mx-3 space-y-6">
           <div className="space-y-3">
             {links.map((link) => {
